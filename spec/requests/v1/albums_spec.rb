@@ -61,7 +61,7 @@ RSpec.describe V1::AlbumsController do
     context 'with valid name' do
       let(:name) { 'Albumi' }
 
-      it 'returns ok' do
+      it 'returns success status' do
         subject
         expect(response.parsed_body).to eq('status' => 'success')
         expect(response.status).to eq(200)
@@ -73,7 +73,7 @@ RSpec.describe V1::AlbumsController do
     end
 
     context 'with invalid name' do
-      it 'will fail' do
+      it 'returns failed status' do
         subject
         expect(response.parsed_body).to eq('status' => 'failed')
         expect(response.status).to eq(422)

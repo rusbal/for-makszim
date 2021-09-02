@@ -24,4 +24,32 @@ RSpec.describe V1::PhotosController do
       expect(response.status).to eq(200)
     end
   end
+
+  describe 'POST /photos' do
+    let(:name) { nil }
+    let(:album) { FactoryBot.create :album }
+    subject { post "/v1/photos", params: { name: name, album_id: album.id } }
+
+    context 'with valid name' do
+      let(:name) { 'Phototi' }
+
+      it 'returns success status' do
+        subject
+        expect(response.parsed_body).to eq('status' => 'success')
+        expect(response.status).to eq(200)
+      end
+
+      it 'creates one photo' do
+        expect { subject }.to change { Photo.where(name: name).count }.by(1)
+      end
+    end
+
+    context 'with invalid name' do
+      it 'returns failed status' do
+        subject
+        expect(response.parsed_body).to eq('status' => 'failed')
+        expect(response.status).to eq(422)
+      end
+    end
+  end
 end
