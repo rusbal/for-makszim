@@ -80,4 +80,34 @@ RSpec.describe V1::PhotosController do
       end
     end
   end
+
+  describe 'DELETE /photos/:id' do
+    subject { delete "/v1/photos/#{album_id}" }
+
+    context 'when successful' do
+      let(:name) { 'Phototi' }
+      let!(:photo) { FactoryBot.create(:photo, name: name) }
+      let(:album_id) { photo.id }
+
+      it 'returns success status' do
+        subject
+        expect(response.parsed_body).to eq('status' => 'success')
+        expect(response.status).to eq(200)
+      end
+
+      it 'deletes one photo' do
+        expect { subject }.to change { Photo.where(name: name).count }.by(-1)
+      end
+    end
+
+    context 'when it fails' do
+      let(:album_id) { 9 }
+
+      it 'returns failed status' do
+        subject
+        expect(response.parsed_body).to eq('status' => 'failed')
+        expect(response.status).to eq(422)
+      end
+    end
+  end
 end

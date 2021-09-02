@@ -28,6 +28,8 @@ module V1
       else
         render json: { status: 'failed' }, status: :unprocessable_entity
       end
+    rescue ActiveRecord::RecordNotFound
+      render json: { status: 'failed' }, status: :unprocessable_entity
     end
 
     def destroy

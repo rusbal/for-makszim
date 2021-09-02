@@ -22,6 +22,20 @@ module V1
       else
         render json: { status: 'failed' }, status: :unprocessable_entity
       end
+    rescue ActiveRecord::RecordNotFound
+      render json: { status: 'failed' }, status: :unprocessable_entity
+    end
+
+    def destroy
+      album = Photo.find(params[:id])
+
+      if album.delete
+        render json: { status: 'success' }
+      else
+        render json: { status: 'failed' }, status: :unprocessable_entity
+      end
+    rescue ActiveRecord::RecordNotFound
+      render json: { status: 'failed' }, status: :unprocessable_entity
     end
 
     private
