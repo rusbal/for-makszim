@@ -8,9 +8,9 @@ module V1
       photo = Photo.new(photo_params)
 
       if photo.save
-        render json: { status: 'success' }
+        success
       else
-        render json: { status: 'failed' }, status: :unprocessable_entity
+        failure
       end
     end
 
@@ -18,24 +18,24 @@ module V1
       photo = Photo.find(params[:id])
 
       if photo.update(photo_params)
-        render json: { status: 'success' }
+        success
       else
-        render json: { status: 'failed' }, status: :unprocessable_entity
+        failure
       end
     rescue ActiveRecord::RecordNotFound
-      render json: { status: 'failed' }, status: :unprocessable_entity
+      failure
     end
 
     def destroy
       album = Photo.find(params[:id])
 
       if album.delete
-        render json: { status: 'success' }
+        success
       else
-        render json: { status: 'failed' }, status: :unprocessable_entity
+        failure
       end
     rescue ActiveRecord::RecordNotFound
-      render json: { status: 'failed' }, status: :unprocessable_entity
+      failure
     end
 
     private

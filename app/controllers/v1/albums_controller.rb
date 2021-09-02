@@ -14,9 +14,9 @@ module V1
       album = Album.new(album_params)
 
       if album.save
-        render json: { status: 'success' }
+        success
       else
-        render json: { status: 'failed' }, status: :unprocessable_entity
+        failure
       end
     end
 
@@ -24,24 +24,24 @@ module V1
       album = Album.find(params[:id])
 
       if album.update(album_params)
-        render json: { status: 'success' }
+        success
       else
-        render json: { status: 'failed' }, status: :unprocessable_entity
+        failure
       end
     rescue ActiveRecord::RecordNotFound
-      render json: { status: 'failed' }, status: :unprocessable_entity
+      failure
     end
 
     def destroy
       album = Album.find(params[:id])
 
       if album.delete
-        render json: { status: 'success' }
+        success
       else
-        render json: { status: 'failed' }, status: :unprocessable_entity
+        failure
       end
     rescue ActiveRecord::RecordNotFound
-      render json: { status: 'failed' }, status: :unprocessable_entity
+      failure
     end
 
     private
