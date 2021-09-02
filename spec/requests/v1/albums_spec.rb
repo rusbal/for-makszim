@@ -80,4 +80,32 @@ RSpec.describe V1::AlbumsController do
       end
     end
   end
+
+  describe 'PATCH /albums' do
+    let(:album) { FactoryBot.create :album, name: 'Zippy' }
+    let(:name) { nil }
+    subject { patch "/v1/albums/#{album.id}", params: { name: name } }
+
+    context 'with valid name' do
+      let(:name) { 'Albumi' }
+
+      it 'returns success status' do
+        subject
+        expect(response.parsed_body).to eq('status' => 'success')
+        expect(response.status).to eq(200)
+      end
+
+      it 'creates one album' do
+        expect { subject }.to change { Album.where(name: name).count }.by(1)
+      end
+    end
+
+    context 'with invalid name' do
+      it 'returns failed status' do
+        subject
+        expect(response.parsed_body).to eq('status' => 'failed')
+        expect(response.status).to eq(422)
+      end
+    end
+  end
 end

@@ -11,13 +11,29 @@ module V1
     end
 
     def create
-      album = Album.new(name: params[:name])
+      album = Album.new(album_params)
 
       if album.save
         render json: { status: 'success' }
       else
         render json: { status: 'failed' }, status: :unprocessable_entity
       end
+    end
+
+    def update
+      album = Album.find(params[:id])
+
+      if album.update(album_params)
+        render json: { status: 'success' }
+      else
+        render json: { status: 'failed' }, status: :unprocessable_entity
+      end
+    end
+
+    private
+
+    def album_params
+      params.permit(:name)
     end
   end
 end
