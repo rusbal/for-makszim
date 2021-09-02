@@ -1,0 +1,232 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.2
+-- Dumped by pg_dump version 13.3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: albums; Type: TABLE; Schema: public; Owner: recruitd_user
+--
+
+CREATE TABLE public.albums (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.albums OWNER TO recruitd_user;
+
+--
+-- Name: albums_id_seq; Type: SEQUENCE; Schema: public; Owner: recruitd_user
+--
+
+CREATE SEQUENCE public.albums_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.albums_id_seq OWNER TO recruitd_user;
+
+--
+-- Name: albums_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: recruitd_user
+--
+
+ALTER SEQUENCE public.albums_id_seq OWNED BY public.albums.id;
+
+
+--
+-- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: recruitd_user
+--
+
+CREATE TABLE public.ar_internal_metadata (
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.ar_internal_metadata OWNER TO recruitd_user;
+
+--
+-- Name: photos; Type: TABLE; Schema: public; Owner: recruitd_user
+--
+
+CREATE TABLE public.photos (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    album_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.photos OWNER TO recruitd_user;
+
+--
+-- Name: photos_id_seq; Type: SEQUENCE; Schema: public; Owner: recruitd_user
+--
+
+CREATE SEQUENCE public.photos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.photos_id_seq OWNER TO recruitd_user;
+
+--
+-- Name: photos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: recruitd_user
+--
+
+ALTER SEQUENCE public.photos_id_seq OWNED BY public.photos.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: recruitd_user
+--
+
+CREATE TABLE public.schema_migrations (
+    version character varying NOT NULL
+);
+
+
+ALTER TABLE public.schema_migrations OWNER TO recruitd_user;
+
+--
+-- Name: albums id; Type: DEFAULT; Schema: public; Owner: recruitd_user
+--
+
+ALTER TABLE ONLY public.albums ALTER COLUMN id SET DEFAULT nextval('public.albums_id_seq'::regclass);
+
+
+--
+-- Name: photos id; Type: DEFAULT; Schema: public; Owner: recruitd_user
+--
+
+ALTER TABLE ONLY public.photos ALTER COLUMN id SET DEFAULT nextval('public.photos_id_seq'::regclass);
+
+
+--
+-- Data for Name: albums; Type: TABLE DATA; Schema: public; Owner: recruitd_user
+--
+
+COPY public.albums (id, name, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ar_internal_metadata; Type: TABLE DATA; Schema: public; Owner: recruitd_user
+--
+
+COPY public.ar_internal_metadata (key, value, created_at, updated_at) FROM stdin;
+environment	development	2021-09-02 18:11:16.108489	2021-09-02 18:11:16.108489
+\.
+
+
+--
+-- Data for Name: photos; Type: TABLE DATA; Schema: public; Owner: recruitd_user
+--
+
+COPY public.photos (id, name, album_id, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: recruitd_user
+--
+
+COPY public.schema_migrations (version) FROM stdin;
+20210902182043
+20210902183033
+\.
+
+
+--
+-- Name: albums_id_seq; Type: SEQUENCE SET; Schema: public; Owner: recruitd_user
+--
+
+SELECT pg_catalog.setval('public.albums_id_seq', 1, false);
+
+
+--
+-- Name: photos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: recruitd_user
+--
+
+SELECT pg_catalog.setval('public.photos_id_seq', 1, false);
+
+
+--
+-- Name: albums albums_pkey; Type: CONSTRAINT; Schema: public; Owner: recruitd_user
+--
+
+ALTER TABLE ONLY public.albums
+    ADD CONSTRAINT albums_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: recruitd_user
+--
+
+ALTER TABLE ONLY public.ar_internal_metadata
+    ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: photos photos_pkey; Type: CONSTRAINT; Schema: public; Owner: recruitd_user
+--
+
+ALTER TABLE ONLY public.photos
+    ADD CONSTRAINT photos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: recruitd_user
+--
+
+ALTER TABLE ONLY public.schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: index_photos_on_album_id; Type: INDEX; Schema: public; Owner: recruitd_user
+--
+
+CREATE INDEX index_photos_on_album_id ON public.photos USING btree (album_id);
+
+
+--
+-- Name: photos fk_rails_2593557582; Type: FK CONSTRAINT; Schema: public; Owner: recruitd_user
+--
+
+ALTER TABLE ONLY public.photos
+    ADD CONSTRAINT fk_rails_2593557582 FOREIGN KEY (album_id) REFERENCES public.albums(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
