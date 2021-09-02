@@ -3,5 +3,11 @@ module V1
     def index
       @albums = Album.includes(:photos)
     end
+
+    def show
+      @album = Album.where(id: params[:id])
+                    .includes(:photos)
+                    .first
+    end
   end
 end
