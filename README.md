@@ -1,24 +1,13 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
+* Raymond Usbal
+* raymond@philippinedev.com
 
-* Ruby version
+```
+➜  photo_api git:(master) bundle exec rspec
+.........................
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Finished in 3.61 seconds (files took 2.41 seconds to load)
+25 examples, 0 failures
+```
