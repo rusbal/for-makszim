@@ -81,7 +81,7 @@ RSpec.describe V1::AlbumsController do
     end
   end
 
-  describe 'PATCH /albums' do
+  describe 'PATCH /albums/:id' do
     let(:album) { FactoryBot.create :album, name: 'Zippy' }
     let(:name) { nil }
     subject { patch "/v1/albums/#{album.id}", params: { name: name } }

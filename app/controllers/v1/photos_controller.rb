@@ -14,6 +14,16 @@ module V1
       end
     end
 
+    def update
+      photo = Photo.find(params[:id])
+
+      if photo.update(photo_params)
+        render json: { status: 'success' }
+      else
+        render json: { status: 'failed' }, status: :unprocessable_entity
+      end
+    end
+
     private
 
     def photo_params
