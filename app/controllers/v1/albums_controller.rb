@@ -30,6 +30,18 @@ module V1
       end
     end
 
+    def destroy
+      album = Album.find(params[:id])
+
+      if album.delete
+        render json: { status: 'success' }
+      else
+        render json: { status: 'failed' }, status: :unprocessable_entity
+      end
+    rescue ActiveRecord::RecordNotFound
+      render json: { status: 'failed' }, status: :unprocessable_entity
+    end
+
     private
 
     def album_params

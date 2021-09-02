@@ -81,30 +81,63 @@ RSpec.describe V1::AlbumsController do
     end
   end
 
-  describe 'PATCH /albums/:id' do
+  describe 'with existing record' do
     let(:album) { FactoryBot.create :album, name: 'Zippy' }
-    let(:name) { nil }
-    subject { patch "/v1/albums/#{album.id}", params: { name: name } }
 
-    context 'with valid name' do
-      let(:name) { 'Albumi' }
+    describe 'PATCH /albums/:id' do
+      let(:name) { nil }
+      subject { patch "/v1/albums/#{album.id}", params: { name: name } }
 
-      it 'returns success status' do
-        subject
-        expect(response.parsed_body).to eq('status' => 'success')
-        expect(response.status).to eq(200)
+      context 'with valid name' do
+        let(:name) { 'Albumi' }
+
+        it 'returns success status' do
+          subject
+          expect(response.parsed_body).to eq('status' => 'success')
+          expect(response.status).to eq(200)
+        end
+
+        it 'creates one album' do
+          expect { subject }.to change { Album.where(name: name).count }.by(1)
+        end
       end
 
-      it 'creates one album' do
-        expect { subject }.to change { Album.where(name: name).count }.by(1)
+      context 'with invalid name' do
+        it 'returns failed status' do
+          subject
+          expect(response.parsed_body).to eq('status' => 'failed')
+          expect(response.status).to eq(422)
+        end
       end
     end
 
-    context 'with invalid name' do
-      it 'returns failed status' do
-        subject
-        expect(response.parsed_body).to eq('status' => 'failed')
-        expect(response.status).to eq(422)
+    describe 'DELETE /albums/:id' do
+      subject { delete "/v1/albums/#{album_id}" }
+
+      context 'when successful' do
+        let(:name) { 'Albumi' }
+        let!(:album) { FactoryBot.create(:album, name: name) }
+        let(:album_id) { album.id }
+
+        it 'returns success status' do
+          subject
+          expect(response.parsed_body).to eq('status' => 'success')
+          expect(response.status).to eq(200)
+        end
+
+        it 'deletes one album' do
+          expect { subject }.to change { Album.where(name: name).count }.by(-1)
+        end
+      end
+
+      context 'when it fails' do
+        let(:album_id) { 9 }
+
+        it 'returns failed status' do
+          subject
+          expect(response.parsed_body).to eq('status' => 'failed')
+          expect(response.status).to eq(422)
+        end
       end
     end
   end
