@@ -32,6 +32,11 @@ group :development, :test do
   gem 'faker'
   gem 'pry-byebug'
   gem 'rspec-rails'
+  gem 'rspec-json_expectations'
+end
+
+group :test do
+  gem 'shoulda-matchers'
 end
 
 group :development do
