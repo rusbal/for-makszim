@@ -68,3 +68,9 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+def jwt_sign_in(email:, password:)
+  params = { auth: { email: email, password: password } }
+  post "/user_token", params: params
+  response.parsed_body["jwt"]
+end
