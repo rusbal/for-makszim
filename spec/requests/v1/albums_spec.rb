@@ -3,6 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe V1::AlbumsController do
+  let(:user) { FactoryBot.create(:user) }
+  let(:token) { jwt_sign_in(email: user.email, password: user.password) }
+  let(:headers) do
+    { authorization: "JWT #{token}" }
+  end
   let(:json_format) do
     {
       include: {
@@ -30,7 +35,7 @@ RSpec.describe V1::AlbumsController do
       let!(:albums) { FactoryBot.create_list(:album, 3) }
       let(:expected_body) { albums.as_json(json_format) }
 
-      subject { get '/v1/albums' }
+      subject { get '/v1/albums', headers: headers }
 
       it 'returns a list of albums with photos' do
         subject
@@ -44,7 +49,7 @@ RSpec.describe V1::AlbumsController do
       let(:albums) { [album] }
       let(:expected_body) { album.as_json(json_format) }
 
-      subject { get "/v1/albums/#{album.id}" }
+      subject { get "/v1/albums/#{album.id}", headers: headers }
 
       it 'returns an album with photos' do
         subject
@@ -56,7 +61,7 @@ RSpec.describe V1::AlbumsController do
 
   describe 'POST /albums' do
     let(:name) { nil }
-    subject { post "/v1/albums", params: { name: name } }
+    subject { post "/v1/albums", params: { name: name }, headers: headers }
 
     context 'with valid name' do
       let(:name) { 'Albumi' }
@@ -86,7 +91,7 @@ RSpec.describe V1::AlbumsController do
 
     describe 'PATCH /albums/:id' do
       let(:name) { nil }
-      subject { patch "/v1/albums/#{album.id}", params: { name: name } }
+      subject { patch "/v1/albums/#{album.id}", params: { name: name }, headers: headers }
 
       context 'with valid name' do
         let(:name) { 'Albumi' }
@@ -112,7 +117,7 @@ RSpec.describe V1::AlbumsController do
     end
 
     describe 'DELETE /albums/:id' do
-      subject { delete "/v1/albums/#{album_id}" }
+      subject { delete "/v1/albums/#{album_id}", headers: headers }
 
       context 'when successful' do
         let(:name) { 'Albumi' }
