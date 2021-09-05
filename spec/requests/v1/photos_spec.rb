@@ -3,6 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe V1::PhotosController do
+  let(:user) { FactoryBot.create(:user) }
+  let(:token) { jwt_sign_in(email: user.email, password: user.password) }
+  let(:headers) do
+    { authorization: "JWT #{token}" }
+  end
   let(:json_format) do
     {
       except: %i[
@@ -16,7 +21,7 @@ RSpec.describe V1::PhotosController do
     let!(:photo) { FactoryBot.create(:photo) }
     let(:expected_body) { photo.as_json(json_format) }
 
-    subject { get "/v1/photos/#{photo.id}" }
+    subject { get "/v1/photos/#{photo.id}", headers: headers }
 
     it 'returns a photo' do
       subject
@@ -28,7 +33,7 @@ RSpec.describe V1::PhotosController do
   describe 'POST /photos' do
     let(:name) { nil }
     let(:album) { FactoryBot.create :album }
-    subject { post "/v1/photos", params: { name: name, album_id: album.id } }
+    subject { post "/v1/photos", params: { name: name, album_id: album.id }, headers: headers }
 
     context 'with valid name' do
       let(:name) { 'Phototi' }
@@ -56,7 +61,7 @@ RSpec.describe V1::PhotosController do
   describe 'PATCH /photos/:id' do
     let(:album) { FactoryBot.create :photo, name: 'Yellow' }
     let(:name) { nil }
-    subject { patch "/v1/photos/#{album.id}", params: { name: name } }
+    subject { patch "/v1/photos/#{album.id}", params: { name: name }, headers: headers }
 
     context 'with valid name' do
       let(:name) { 'Phototi' }
@@ -82,7 +87,7 @@ RSpec.describe V1::PhotosController do
   end
 
   describe 'DELETE /photos/:id' do
-    subject { delete "/v1/photos/#{album_id}" }
+    subject { delete "/v1/photos/#{album_id}", headers: headers }
 
     context 'when successful' do
       let(:name) { 'Phototi' }
